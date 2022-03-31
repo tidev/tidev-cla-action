@@ -1,0 +1,18 @@
+{
+  "name": "tidev-cla-action",
+  "version": "1.0.0",
+  "description": "Checks if a contributor has signed the CLA",
+  "exports": "./index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "TiDev, Inc. <tisdk@cb1inc.com>",
+  "maintainers": [
+    "Chris Barber <chris@cb1inc.com>"
+  ],
+  "license": "Apache-2.0",
+  "dependencies": {
+    "got": "^12.0.3"
+  }
+}
