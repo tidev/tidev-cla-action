@@ -20,9 +20,11 @@ const signed = body
 	?.slice(2)
 	.map(u => u.split('|')[2].trim());
 
-if (signed.find(u => u === process.env.GITHUB_USER)) {
-	console.log('User is authorized');
+const user = process.env.GITHUB_USER;
+
+if (signed.find(u => u === user)) {
+	console.log(`User ${user} is authorized`);
 } else {
-	console.log('User not authorized');
+	console.log(`User ${user} not authorized`);
 	process.exit(1);
 }
