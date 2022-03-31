@@ -11,8 +11,5 @@
   "maintainers": [
     "Chris Barber <chris@cb1inc.com>"
   ],
-  "license": "Apache-2.0",
-  "dependencies": {
-    "got": "^12.0.3"
-  }
+  "license": "Apache-2.0"
 }

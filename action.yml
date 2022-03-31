@@ -6,4 +6,6 @@ outputs:
     description: 'Whether the CLA has been signed'
 runs:
   using: 'node16'
+  env:
+    GITHUB_USER: ${{ github.actor }}
   main: './index.js'
