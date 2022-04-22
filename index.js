@@ -22,7 +22,7 @@ const signed = body
 
 const user = process.env.GITHUB_USER;
 
-if (signed.find(u => u === user)) {
+if (user === 'dependabot[bot]' || signed.find(u => u === user)) {
 	console.log(`User ${user} is authorized`);
 } else {
 	console.log(`User ${user} not authorized`);
