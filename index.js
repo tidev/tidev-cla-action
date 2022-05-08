@@ -1,5 +1,7 @@
 import https from 'https';
+import { context, getOctokit } from '@actions/github';
 
+const gh = getOctokit();
 const url = 'https://raw.githubusercontent.com/tidev/organization-docs/main/AUTHORIZED_CONTRIBUTORS.md';
 
 const body = await new Promise((resolve, reject) => {
@@ -15,16 +17,28 @@ const body = await new Promise((resolve, reject) => {
 	});
 });
 
-const signed = body
+const signedUsers = body
 	.match(/^\|.+\|$/mg)
 	?.slice(2)
 	.map(u => u.split('|')[2].trim());
 
-const user = process.env.GITHUB_USER;
+const pr = await gh.rest.pulls.listCommits({
+	owner: context.repo.owner,
+	repo: context.repo.repo,
+	pull_number: context.payload.pull_request.number
+});
 
-if (user === 'dependabot[bot]' || signed.find(u => u === user)) {
-	console.log(`User ${user} is authorized`);
-} else {
-	console.log(`User ${user} not authorized`);
+
+const signed = pr.data.some(({ author: { login }, commit: { sha } }) => {
+	const userHasSigned = signedUsers.includes(login);
+	if (userHasSigned) {
+		console.log(`User ${user} for commit ${sha} is authorized`);
+	} else {
+		console.log(`User ${user} for commit ${sha} not authorized`);
+	}
+	return userHasSigned;
+});
+
+if (!signed) {
 	process.exit(1);
 }
