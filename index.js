@@ -17,10 +17,12 @@ const body = await new Promise((resolve, reject) => {
 	});
 });
 
-const signedUsers = body
+const signedUsers = [...body
 	.match(/^\|.+\|$/mg)
 	?.slice(2)
-	.map(u => u.split('|')[2].trim());
+	.map(u => u.split('|')[2].trim()),
+	'dependabot[bot]'
+];
 
 const pr = await gh.rest.pulls.listCommits({
 	owner: context.repo.owner,
