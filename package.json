@@ -11,5 +11,8 @@
   "maintainers": [
     "Chris Barber <chris@cb1inc.com>"
   ],
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@actions/github": "^5.0.1"
+  }
 }
