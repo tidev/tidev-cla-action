@@ -32,16 +32,20 @@ const pr = await gh.rest.pulls.listCommits({
 	pull_number: context.payload.pull_request.number
 });
 
-const signed = pr.data.every(({ author: { login }, sha }) => {
-	const userHasSigned = signedUsers.includes(login);
-	if (userHasSigned) {
+let valid = null;
+
+for (const { author: { login }, sha } of pr.data) {
+	if (signedUsers.includes(login)) {
 		console.log(`User ${login} for commit ${sha} is authorized`);
+		if (valid === null) {
+			valid = true;
+		}
 	} else {
 		console.log(`User ${login} for commit ${sha} not authorized`);
+		valid = false;
 	}
-	return userHasSigned;
-});
+}
 
-if (!signed) {
+if (!valid) {
 	process.exit(1);
 }
