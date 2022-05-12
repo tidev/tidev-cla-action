@@ -1,8 +1,11 @@
 import https from 'https';
 import { context, getOctokit } from '@actions/github';
-import core from '@actions/core';
+import * as core from '@actions/core';
 
-const gh = getOctokit(core.getInput('repo-token'));
+const token = core.getInput('repo-token', { required: true });
+console.log('Token:', typeof token);
+
+const gh = getOctokit(token);
 const url = 'https://raw.githubusercontent.com/tidev/organization-docs/main/AUTHORIZED_CONTRIBUTORS.md';
 
 const body = await new Promise((resolve, reject) => {
