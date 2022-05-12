@@ -3,8 +3,6 @@ import { context, getOctokit } from '@actions/github';
 import * as core from '@actions/core';
 
 const token = core.getInput('repo-token', { required: true });
-console.log('Token:', typeof token);
-
 const gh = getOctokit(token);
 const url = 'https://raw.githubusercontent.com/tidev/organization-docs/main/AUTHORIZED_CONTRIBUTORS.md';
 
@@ -34,13 +32,12 @@ const pr = await gh.rest.pulls.listCommits({
 	pull_number: context.payload.pull_request.number
 });
 
-
 const signed = pr.data.some(({ author: { login }, commit: { sha } }) => {
 	const userHasSigned = signedUsers.includes(login);
 	if (userHasSigned) {
-		console.log(`User ${user} for commit ${sha} is authorized`);
+		console.log(`User ${login} for commit ${sha} is authorized`);
 	} else {
-		console.log(`User ${user} for commit ${sha} not authorized`);
+		console.log(`User ${login} for commit ${sha} not authorized`);
 	}
 	return userHasSigned;
 });
