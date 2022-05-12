@@ -18,9 +18,9 @@ jobs:
     name: Verify contributor
 
     steps:
-    - env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      uses: tidev/tidev-cla-action@v1
+    - uses: tidev/tidev-cla-action@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ## Releasing a new version
