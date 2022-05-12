@@ -19,7 +19,7 @@ jobs:
 
     steps:
     - env:
-        GITHUB_USER: ${{ github.actor }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       uses: tidev/tidev-cla-action@v1
 ```
 
