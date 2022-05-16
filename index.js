@@ -22,7 +22,7 @@ const body = await new Promise((resolve, reject) => {
 const signedUsers = [...body
 	.match(/^\|.+\|$/mg)
 	?.slice(2)
-	.map(u => u.split('|')[2].trim()),
+	.map(u => u.split('|')[2].trim().toLowerCase()),
 	'dependabot[bot]'
 ];
 
@@ -35,7 +35,7 @@ const pr = await gh.rest.pulls.listCommits({
 let valid = null;
 
 for (const { author: { login }, sha } of pr.data) {
-	if (signedUsers.includes(login)) {
+	if (signedUsers.includes(login.toLowerCase())) {
 		console.log(`User ${login} for commit ${sha} is authorized`);
 		if (valid === null) {
 			valid = true;
