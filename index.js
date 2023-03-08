@@ -58,6 +58,9 @@ if (context.eventName === 'push') {
 			valid = false;
 		}
 	}
+
+} else {
+	console.error(`Unsupported event "${context.eventName}"`);
 }
 
 if (!valid) {
