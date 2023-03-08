@@ -26,15 +26,10 @@ const signedUsers = [...body
 	'dependabot[bot]'
 ];
 
-const pr = await gh.rest.pulls.listCommits({
-	owner: context.repo.owner,
-	repo: context.repo.repo,
-	pull_number: context.payload.pull_request.number
-});
-
 let valid = null;
 
-for (const { author: { login }, sha } of pr.data) {
+if (context.eventName === 'push') {
+	const login = context.actor;
 	if (signedUsers.includes(login.toLowerCase())) {
 		console.log(`User ${login} for commit ${sha} is authorized`);
 		if (valid === null) {
@@ -43,6 +38,25 @@ for (const { author: { login }, sha } of pr.data) {
 	} else {
 		console.log(`User ${login} for commit ${sha} not authorized`);
 		valid = false;
+	}
+
+} else if (context.eventName === 'pull_request') {
+	const pr = await gh.rest.pulls.listCommits({
+		owner: context.repo.owner,
+		repo: context.repo.repo,
+		pull_number: context.payload.pull_request.number
+	});
+
+	for (const { author: { login }, sha } of pr.data) {
+		if (signedUsers.includes(login.toLowerCase())) {
+			console.log(`User ${login} for commit ${sha} is authorized`);
+			if (valid === null) {
+				valid = true;
+			}
+		} else {
+			console.log(`User ${login} for commit ${sha} not authorized`);
+			valid = false;
+		}
 	}
 }
 
