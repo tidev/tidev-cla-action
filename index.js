@@ -31,12 +31,12 @@ let valid = null;
 if (context.eventName === 'push') {
 	const login = context.actor;
 	if (signedUsers.includes(login.toLowerCase())) {
-		console.log(`User ${login} for commit ${sha} is authorized`);
+		console.log(`User ${login} for commit ${context.sha} is authorized`);
 		if (valid === null) {
 			valid = true;
 		}
 	} else {
-		console.log(`User ${login} for commit ${sha} not authorized`);
+		console.log(`User ${login} for commit ${context.sha} not authorized`);
 		valid = false;
 	}
 
