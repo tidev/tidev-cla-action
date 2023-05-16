@@ -47,11 +47,11 @@ if (context.eventName === 'push') {
 		pull_number: context.payload.pull_request.number
 	});
 
-	for (const commit of pr.data) {
-		const { author, sha } = commit;
-		const login = author?.login;
+	for (const commitData of pr.data) {
+		const { author, commit, sha } = commitData;
+		const login = author?.login || commit?.author?.name;
 		if (!login) {
-			console.log(`User login not found for commit ${sha}!`, commit);
+			console.log(`User login not found for commit ${sha}!`, commitData);
 			valid = false;
 		} else if (signedUsers.includes(login.toLowerCase())) {
 			console.log(`User ${login} for commit ${sha} is authorized`);
