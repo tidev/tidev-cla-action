@@ -47,8 +47,12 @@ if (context.eventName === 'push') {
 		pull_number: context.payload.pull_request.number
 	});
 
-	for (const { author: { login }, sha } of pr.data) {
-		if (signedUsers.includes(login.toLowerCase())) {
+	for (const { author, sha } of pr.data) {
+		const login = author?.login;
+		if (!login) {
+			console.log(`User login not found for commit ${sha}!`, login);
+			valid = false;
+		} else if (signedUsers.includes(login.toLowerCase())) {
 			console.log(`User ${login} for commit ${sha} is authorized`);
 			if (valid === null) {
 				valid = true;
