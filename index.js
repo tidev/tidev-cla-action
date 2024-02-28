@@ -1,36 +1,50 @@
-import https from 'https';
+import https from 'node:https';
 import { context, getOctokit } from '@actions/github';
 import * as core from '@actions/core';
 
-const token = core.getInput('repo-token', { required: true });
-const gh = getOctokit(token);
-const url = 'https://raw.githubusercontent.com/tidev/organization-docs/main/AUTHORIZED_CONTRIBUTORS.md';
+const ghToken = core.getInput('repo-token', { required: true });
+const gh = getOctokit(ghToken);
 
-const body = await new Promise((resolve, reject) => {
-	https.get(url, res => {
-		let buf = '';
-		res.on('data', data => {
-			buf += data.toString();
-		});
-		res.on('end', () => {
-			resolve(buf);
-		});
-		res.on('error', reject);
+const cache = {
+	'dependabot[bot]': true
+};
+
+async function check(username) {
+	if (cache[username]) {
+		return cache[username];
+	}
+
+	const body = await new Promise((resolve, reject) => {
+		// checkToken
+		https.get(
+			`https://tidev.io/api/cla/check/${username}`,
+			res => {
+				let buf = '';
+				res.on('data', data => {
+					buf += data.toString();
+				});
+				res.on('end', () => {
+					if (res.statusCode === 200) {
+						resolve(buf);
+					} else {
+						reject(new Error(`Failed to check CLA: ${res.statusCode} ${res.statusMessage}`));
+					}
+				});
+				res.on('error', reject);
+			}
+		);
 	});
-});
 
-const signedUsers = [...body
-	.match(/^\|.+\|$/mg)
-	?.slice(2)
-	.map(u => u.split('|')[2].trim().toLowerCase()),
-	'dependabot[bot]'
-];
+	const { signed } = JSON.parse(body);
+	cache[username] = signed;
+	return signed;
+}
 
 let valid = null;
 
 if (context.eventName === 'push') {
 	const login = context.actor;
-	if (signedUsers.includes(login.toLowerCase())) {
+	if (await check(login.toLowerCase())) {
 		console.log(`User ${login} for commit ${context.sha} is authorized`);
 		if (valid === null) {
 			valid = true;
@@ -53,7 +67,7 @@ if (context.eventName === 'push') {
 		if (!login) {
 			console.log(`User login not found for commit ${sha}!`, commitData);
 			valid = false;
-		} else if (signedUsers.includes(login.toLowerCase())) {
+		} else if (await check(login.toLowerCase())) {
 			console.log(`User ${login} for commit ${sha} is authorized`);
 			if (valid === null) {
 				valid = true;
