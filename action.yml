@@ -2,11 +2,13 @@ name: 'TiDev CLA Checker'
 author: 'Chris Barber'
 description: 'Checks if a contributor has signed the CLA'
 inputs:
+  check-token:
+    description: 'The CLA check token'
   repo-token:
     description: 'The GitHub token'
 outputs:
   results:
     description: 'Whether the CLA has been signed'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: './index.js'
