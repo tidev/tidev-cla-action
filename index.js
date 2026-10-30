@@ -68,8 +68,8 @@ if (context.eventName === 'push') {
 
 	for (const commitData of pr.data) {
 		const { author, commit, sha } = commitData;
-		let login = commit.author?.login ?? commit.commit.author.name;
-		if (AI_AGENTS.has(login.toLowerCase())) {
+		let login = author?.login || commit?.author?.name;
+		if (login && AI_AGENTS.has(login.toLowerCase())) {
 			console.log(`AI agent login deteced for ${sha}, fallin back to PR author`);
 			login = context.payload.pull_request.user.login; // the human responsible
 		}
