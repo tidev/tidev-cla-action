@@ -10,7 +10,7 @@ const cache = {
 };
 
 const AI_AGENTS = new Set([
-	'claude', 
+	'claude',
 	'copilot'
 ]);
 
@@ -70,7 +70,7 @@ if (context.eventName === 'push') {
 		const { author, commit, sha } = commitData;
 		let login = author?.login || commit?.author?.name;
 		if (login && AI_AGENTS.has(login.toLowerCase())) {
-			console.log(`AI agent login deteced for ${sha}, fallin back to PR author`);
+			console.log(`AI agent login detected for ${sha}, falling back to PR author`);
 			login = context.payload.pull_request.user.login; // the human responsible
 		}
 
