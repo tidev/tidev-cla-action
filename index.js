@@ -10,8 +10,8 @@ const cache = {
 };
 
 const AI_AGENTS = new Set([
-  'claude', 
-  'copilot'
+	'claude', 
+	'copilot'
 ]);
 
 async function check(username) {
