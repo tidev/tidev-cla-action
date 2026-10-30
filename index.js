@@ -9,6 +9,11 @@ const cache = {
 	'dependabot[bot]': true
 };
 
+const AI_AGENTS = new Set([
+	'claude',
+	'copilot'
+]);
+
 async function check(username) {
 	if (cache[username]) {
 		return cache[username];
@@ -63,7 +68,12 @@ if (context.eventName === 'push') {
 
 	for (const commitData of pr.data) {
 		const { author, commit, sha } = commitData;
-		const login = author?.login || commit?.author?.name;
+		let login = author?.login || commit?.author?.name;
+		if (login && AI_AGENTS.has(login.toLowerCase())) {
+			console.log(`AI agent login detected for ${sha}, falling back to PR author`);
+			login = context.payload.pull_request.user.login; // the human responsible
+		}
+
 		if (!login) {
 			console.log(`User login not found for commit ${sha}!`, commitData);
 			valid = false;
