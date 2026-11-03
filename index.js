@@ -6,7 +6,8 @@ const ghToken = core.getInput('repo-token', { required: true });
 const gh = getOctokit(ghToken);
 
 const cache = {
-	'dependabot[bot]': true
+	'dependabot[bot]': true,
+	'github-actions[bot]': true
 };
 
 const AI_AGENTS = new Set([
