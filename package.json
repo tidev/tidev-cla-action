@@ -1,6 +1,6 @@
 {
   "name": "tidev-cla-action",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Checks if a contributor has signed the CLA",
   "exports": "./index.js",
   "type": "module",
