@@ -10,5 +10,5 @@ outputs:
   results:
     description: 'Whether the CLA has been signed'
 runs:
-  using: 'node20'
+  using: 'node24'
   main: './index.js'
