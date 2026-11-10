@@ -23,7 +23,7 @@ async function check(username) {
 	const body = await new Promise((resolve, reject) => {
 		// checkToken
 		https.get(
-			`https://tidev.io/api/cla/check/${username}`,
+			`https://titaniumsdk.com/contribute/cla/check/${encodeURIComponent(username)}`,
 			res => {
 				let buf = '';
 				res.on('data', data => {
